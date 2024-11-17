@@ -1,20 +1,24 @@
-import React, { useRef, useState } from 'react'
+import React, {  useRef, useState } from 'react'
 import Header from './Header'
 import CheckValidation from '../utils/CheckValidation';
 import {  createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile } from "firebase/auth";
 import { auth } from '../utils/Firebaseconfig';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '../utils/userCart';
+import { user_avatar } from '../utils/constants';
 
 
 function Login() {
     const dispatch=useDispatch();
+    const navigate=useNavigate();
+
+    const user=useSelector((store)=>store.user);
 
     const [isSignIn,SetIsSignIn]=useState(false);
 
     const [ErrorMessage,setErrorMessage]=useState('');
-    const navigate=useNavigate();
+   
     const name=useRef(null);
     const email=useRef(null);
     const password=useRef(null);
@@ -35,7 +39,7 @@ function Login() {
               const user = userCredential.user;
   
               
-              await updateProfile(user, { displayName: nameValue, photoURL: "https://avatars.githubusercontent.com/u/143855791?v=4" });
+              await updateProfile(user, { displayName: nameValue, photoURL: user_avatar });
               
               
               const updatedUser = auth.currentUser;
@@ -56,7 +60,6 @@ function Login() {
               navigate('/browse');
           } catch (error) {
               const errorCode = error.code;
-              const errorMessage = error.message;
               setErrorMessage(errorCode.slice(5));
           }
       }
@@ -66,7 +69,14 @@ function Login() {
     const handleSignIn=()=>{
         SetIsSignIn(!isSignIn);
         setErrorMessage("");
+        if (name.current) name.current.value = '';
+        if (email.current) email.current.value = '';
+        if (password.current) password.current.value = '';
     }
+
+    if(user){
+      return navigate('/browse');
+      }
 
   return (
     <div className='w-full'>

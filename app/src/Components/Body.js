@@ -6,6 +6,7 @@ import {onAuthStateChanged} from "firebase/auth";
 import { auth } from '../utils/Firebaseconfig';
 import { useDispatch } from 'react-redux';
 import { addUser,removeUser } from '../utils/userCart';
+import Error from './Error';
 
 function Body() {
     const dispatch=useDispatch();
@@ -14,9 +15,8 @@ function Body() {
     useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
             if (user) {
-              const {uid,email,displayname} = user;
-            //   console.log(user);
-              dispatch(addUser({uid,email,displayname}))
+              const {uid,email,displayname,photoURL} = user;
+              dispatch(addUser({uid,email,displayname,photoURL}))
             } else {
                dispatch(removeUser());
             }
@@ -32,6 +32,9 @@ function Body() {
         },{
             element:<Browse/>,
             path:"/browse"
+        },{
+          element:<Error/>,
+          path:"*"
         }
     ])
 
