@@ -3,8 +3,12 @@ import { useSelector } from 'react-redux';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import useNowPlayingMoving from '../Hooks/useNowPlayingMoving';
-import VideoHeader from './VideoHeader';
-import Video from './Video';
+
+import MainContainer from './MainContainer';
+import SecondaryContainer from './SecondaryContainer';
+import usePopularMovies from '../Hooks/usePopularMovies';
+import useTopRatedMovies from '../Hooks/useTopRatedMovies';
+import useUpcomingMovies from '../Hooks/useUpcomingMovies';
 
 function Browse() {
   const user = useSelector((state) => state.user);
@@ -15,6 +19,7 @@ function Browse() {
   if (movie) {
     data = movie?.nowPlayingMovies?.[0]; 
   }
+  console.log(data);
 
   useEffect(() => {
     userAuth();
@@ -27,16 +32,19 @@ function Browse() {
   };
 
   useNowPlayingMoving();
+  usePopularMovies();
+  useTopRatedMovies();
+  useUpcomingMovies();
 
   if (!user) {
     return null;
   }
 
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full h-full">
       <Header />
-      <VideoHeader data={data} />
-      <Video id={data.id} />
+      <MainContainer data={data}/>
+      <SecondaryContainer/>
     </div>
   );
 }

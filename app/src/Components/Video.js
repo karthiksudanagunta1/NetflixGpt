@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import useLatestMovie from "../Hooks/useLatestMovie";
-import { useSelector } from "react-redux";
+// Video.jsx
+import React, { useEffect, useState } from 'react';
+import useLatestMovie from '../Hooks/useLatestMovie';
+import { useSelector } from 'react-redux';
 
 function Video({ id }) {
   const [loading, setLoading] = useState(true);
@@ -15,14 +16,15 @@ function Video({ id }) {
   }, [trailerKey]);
 
   const videoUrl = trailerKey && trailerKey[0]?.key
-  ? `https://www.youtube.com/embed/${trailerKey[0].key}?autoplay=1&mute=1`
-  : "";
-
+    ? `https://www.youtube.com/embed/${trailerKey[0].key}?autoplay=1&mute=1`
+    : '';
 
   return (
-    <div className="absolute  w-screen h-full">
+    <div className="absolute top-0 left-0 w-full h-full">
       {loading ? (
-        <p className="text-white">Loading video...</p>
+        <p className="text-white text-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          Loading video...
+        </p>
       ) : (
         videoUrl && (
           <iframe 

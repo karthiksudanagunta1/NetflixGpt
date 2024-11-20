@@ -1,3 +1,4 @@
+// Header.jsx
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { signOut } from 'firebase/auth';
@@ -7,31 +8,38 @@ import { useNavigate } from 'react-router-dom';
 import { nextflix_avatar } from '../utils/constants';
 
 function Header() {
-    const user = useSelector((store) => store.user);
-    const navigate=useNavigate();
-    const dispatch = useDispatch();
+  const user = useSelector((store) => store.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const onHandleSignout = async () => {
-        try {
-            await signOut(auth);
-            dispatch(removeUser());
-            navigate('/');  
-        } catch (error) {
-            console.error("Error signing out:", error.message);
-        }
-    };
+  const onHandleSignout = async () => {
+    const confirmSignout = window.confirm("Are you sure you want to sign out?");
+    if (confirmSignout) {
+      try {
+        await signOut(auth);
+        dispatch(removeUser());
+        navigate('/');
+      } catch (error) {
+        console.error("Error signing out:", error.message);
+      }
+    }
+  };
 
-    return (
-        <div className='absolute w-full px-10  bg-gradient-to-b from-black z-10 flex justify-between'>
-            <img className='w-2/12 mx-25 ' src={nextflix_avatar} alt="logo" />
-            {user && (
-                <div className='flex items-center m-3'>
-                    <button className='px-2' onClick={onHandleSignout}>Sign Out</button>
-                    <img src={user.photoURL} alt="User Avatar" className='w-15 h-16 px-1 rounded-md' />
-                </div>
-            )}
+  return (
+    <div className="absolute w-full top-0 h-28 left-0 px-10 bg-gradient-to-b from-black bg-opacity-70 z-30 flex justify-between items-center py-4">
+      <img className="w-64" src={nextflix_avatar} alt="Netflix Logo" />
+      {user && (
+        <div className="flex items-center space-x-4">
+          <img
+            src={user.photoURL}
+            onClick={onHandleSignout}
+            alt="User Avatar"
+            className="w-12 h-12 rounded-full cursor-pointer hover:scale-150"
+          />
         </div>
-    );
+      )}
+    </div>
+  );
 }
 
 export default Header;
